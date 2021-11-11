@@ -9,6 +9,8 @@ var usersRouter = require('./routes/users');
 var donutsRouter = require('./routes/donuts');
 var addmodsRouter=require('./routes/addmods');
 var selectorRouter=require('./routes/selector');
+var donuts = require("./models/donuts");
+var resourceRouter = require('./routes/resource');
 
 var app = express();
 
@@ -27,7 +29,7 @@ app.use('/users', usersRouter);
 app.use('/donuts', donutsRouter);
 app.use('/addmods', addmodsRouter);
 app.use('/selector', selectorRouter);
-
+app.use('/resource', resourceRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -44,5 +46,32 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
+const connectionString = process.env.MONGO_CON
+
+mongoose = require('mongoose');
+mongoose.connect(connectionString, {useNewUrlParser: true, useUnifiedTopology: true});
+
+// We can seed the collection if needed on server start
+async function recreateDB(){
+  // Delete everything
+  await donuts.deleteMany();
+ 
+ 
+  var results = [{"donut_type":"chocolate","quantity":'1',"cost":20},
+                 {"donut_type":"honey","quantity":'4',"cost":25},
+                 {"donut_type":"plain", "quantity":'4',"cost":15}]
+ 
+ for(i in results){
+   let instance = new  donuts({donut_type: results[i]["donut_type"], quantity: results[i]["quantity"], cost:results[i]["cost"]});
+   instance.save( function(err,doc) {
+     if(err) return console.error(err);
+     console.log("object added.")
+     });
+ }
+ 
+ }
+ 
+ let reseed = true;
+ if (reseed) { recreateDB();} 
 
 module.exports = app;
