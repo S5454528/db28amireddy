@@ -44,15 +44,38 @@ exports.donuts_create_post = async function(req, res) {
     }   
 }; 
 
-// for a specific Donuts.
-exports.donuts_detail = function(req, res) {
-res.send('NOT IMPLEMENTED: Donuts detail: ' + req.params.id);
-};
+exports.donuts_detail = async function(req, res) { 
+    console.log("detail"  + req.params.id) 
+    try { 
+        result = await donuts.findById( req.params.id) 
+        res.send(result) 
+    } catch (error) { 
+        res.status(500) 
+        res.send(`{"error": document for id ${req.params.id} not found`); 
+    } 
+}; 
+
+exports.donuts_update_put = async function(req, res) { 
+    console.log(`update on id ${req.params.id} with body 
+${JSON.stringify(req.body)}`) 
+    try { 
+        let toUpdate = await donuts.findById( req.params.id) 
+        // Do updates of properties 
+        if(req.body.donut_type)  
+               toUpdate.donut_type = req.body.donut_type; 
+        if(req.body.cost) toUpdate.cost = req.body.cost; 
+        if(req.body.quantity) toUpdate.quantity = req.body.quantity; 
+        let result = await toUpdate.save(); 
+        console.log("Sucess " + result) 
+        res.send(result) 
+    } catch (err) { 
+        res.status(500) 
+        res.send(`{"error": ${err}: Update for id ${req.params.id} 
+failed`); 
+    } 
+}; 
+
 // Handle Costume delete form on DELETE.
 exports.donuts_delete = function(req, res) {
 res.send('NOT IMPLEMENTED: Donuts delete DELETE ' + req.params.id);
-};
-// Handle Costume update form on PUT.
-exports.donuts_update_put = function(req, res) {
-res.send('NOT IMPLEMENTED: Donuts update PUT' + req.params.id);
 };
