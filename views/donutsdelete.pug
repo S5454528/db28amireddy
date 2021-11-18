@@ -1,0 +1,53 @@
+extends layout 
+ 
+block content 
+  h1= title 
+ 
+  if (toShow == null) 
+    h2 No instance to delete 
+  else 
+    - let donutsid = toShow._id 
+    - let donuts_type = toShow.donut_type 
+    - let donutsquantity = toShow.quantity 
+    - let donutscost = toShow.cost 
+    - let actionid = "/resource/donuts/" + donutsid 
+    script let actionid = "#{actionid}" 
+    div 
+      div.row 
+        div(class='donutsAttr mr-3') donuts ID is: 
+        div #{donutsid} 
+      div.row 
+        div(class='donutsAttr mr-3') donuts Type is: 
+        div #{donuts_type} 
+      div.row 
+        div(class='donutsAttr mr-3') donuts quantity is: 
+        div #{donutsquantity} 
+      div.row 
+        div(class='donutsAttr mr-3') donuts Cost is: 
+        div #{donutscost} 
+ 
+    button(class="btn btn-danger m-2" onclick="deleteOnid()") Delete 
+    button(class="btn btn-secondary m-2" onclick="cancel()") Cancel 
+ 
+  script. 
+    function cancel() { 
+      // Go back to the home page for the donuts collection 
+      window.location.href='/donutss' 
+    } 
+  script. 
+    function deleteOnid() { 
+      console.log("starting delete") 
+      // delete first 
+      fetch(actionid, { 
+        method: 'DELETE'      
+      }).then((resp) => { 
+        return resp.text(); // or resp.text() or whatever the server sends 
+      }).then((body) => { 
+        alert("Delete succeded") 
+        window.location.href='/donutss' 
+        // TODO handle body 
+      }).catch((error) => { 
+        // TODO handle error 
+        alert("Delete failed " + error ) 
+      }); 
+    } 

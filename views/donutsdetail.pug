@@ -1,0 +1,35 @@
+extends layout 
+ 
+block content 
+  h1= title 
+ 
+  - let donutsid = toShow._id 
+  - let donutstype = toShow.donut_type 
+  - let donutsquantity = toShow.quantity 
+  - let donutscost = toShow.cost 
+  div 
+    div.row 
+      div(class='donutsAttr mr-3') donuts ID is: 
+      div #{donutsid} 
+    div.row 
+      div(class='donutsAttr mr-3') donuts Type is: 
+      div #{donutstype} 
+    div.row 
+      div(class='donutsAttr mr-3') donuts Quantity is: 
+      div #{donutsquantity} 
+    div.row 
+      div(class='donutsAttr mr-3') donuts Cost is: 
+      div #{donutscost}
+
+    button(class="btn btn-danger m-2" onclick="gobackOnid()") goback  
+    button(class="btn btn-secondary m-2" onclick="cancel()") Cancel 
+
+  script. 
+    function cancel() { 
+      // Go back to the home page for the donuts collection 
+      window.location.href='/donuts' 
+    } 
+  script. 
+    function gobackOnid() { 
+     window.location.href='/donuts'
+   }

@@ -1,0 +1,53 @@
+extends layout 
+ 
+block content 
+  h1= title 
+ 
+  - let donutsid = toShow._id 
+  - let donutstype = toShow.donut_type 
+  - let donutsquantity = toShow.quantity 
+  - let donutscost = toShow.cost
+   
+  div.row(class='mb-2') 
+    div.mr-1 ID is
+    div #{donutsid} 
+  - let actionid = "/resource/donuts/" + donutsid 
+  form(id='DonutsForm', action= actionid, method="PUT") 
+    div.form-group 
+        label.donutAttr(for='donut_type') Donuts type 
+        input#donut_type(type='text', name='donut_type', value= donutstype ) 
+    div.form-group 
+        label.donutAttr(for='quantity') Donuts quantity 
+        input#quantity(type='number', name='quantity', value= donutsquantity ) 
+    div.form-group 
+        label.donutAttr(for='cost') Donuts cost 
+        input#cost(type='number', name='cost', value= donutscost ) 
+
+    button(class="btn btn-danger m-2" onclick="updateOnid()") update  
+    button(class="btn btn-secondary m-2" onclick="cancel()") Cancel 
+
+  script. 
+    function cancel() { 
+      // Go back to the home page for the mango collection 
+      window.location.href='/mangos' 
+    } 
+ 
+  script.
+    function updateOnid() {
+    document.forms['DonutsForm'].addEventListener('submit', (event) => { 
+      event.preventDefault(); 
+      // TODO do something here to show user that form is being submitted 
+      fetch(event.target.action, { 
+        method: 'PUT', 
+        body: new URLSearchParams(new FormData(event.target)) // event.target is the form 
+      }).then((resp) => { 
+        return resp.text(); // or resp.text() or whatever the server sends 
+      }).then((body) => { 
+        alert("Update succeded") 
+        // TODO handle body 
+      }).catch((error) => { 
+        // TODO handle error 
+        alert("Update failed " + error ) 
+      }); 
+    });
+    }

@@ -30,7 +30,7 @@ exports.donuts_create_post = async function(req, res) {
     // We are looking for a body, since POST does not have query parameters. 
     // Even though bodies can be in many different formats, we will be picky 
     // and require that it be a json object 
-    // {"costume_type":"goat", "cost":12, "size":"large"} 
+    // {"Donuts_type":"goat", "cost":12, "size":"large"} 
     document.donut_type = req.body.donut_type; 
     document.quantity = req.body.quantity; 
     document.cost = req.body.cost; 
@@ -75,7 +75,71 @@ failed`);
     } 
 }; 
 
-// Handle Costume delete form on DELETE.
-exports.donuts_delete = function(req, res) {
-res.send('NOT IMPLEMENTED: Donuts delete DELETE ' + req.params.id);
+// Handle Donuts delete on DELETE. 
+exports.donuts_delete = async function(req, res) { 
+    console.log("delete "  + req.params.id) 
+    try { 
+        result = await Donuts.findByIdAndDelete( req.params.id) 
+        console.log("Removed " + result) 
+        res.send(result) 
+    } catch (err) { 
+        res.status(500) 
+        res.send(`{"error": Error deleting ${err}}`); 
+    } 
 };
+
+// Handle a show one view with id specified by query 
+exports.donuts_view_one_Page = async function(req, res) { 
+    console.log("single view for id "  + req.query.id) 
+    try{ 
+        result = await Donuts.findById( req.query.id) 
+        res.render('donutsdetail',  
+{ title: 'Donuts Detail', toShow: result }); 
+    } 
+    catch(err){ 
+        res.status(500) 
+        res.send(`{'error': '${err}'}`); 
+    } 
+}; 
+
+// Handle building the view for creating a donuts. 
+// No body, no in path parameter, no query. 
+// Does not need to be async 
+exports.donuts_create_Page =  function(req, res) { 
+    console.log("create view") 
+    try{ 
+        res.render('donutscreate', { title: 'Donuts Create'}); 
+    } 
+    catch(err){ 
+        res.status(500) 
+        res.send(`{'error': '${err}'}`); 
+    } 
+};
+
+// Handle building the view for updating a donuts. 
+// query provides the id 
+exports.donuts_update_Page =  async function(req, res) { 
+    console.log("update view for item "+req.query.id) 
+    try{ 
+        let result = await Donuts.findById(req.query.id) 
+        res.render('donutsupdate', { title: 'Donuts Update', toShow: result }); 
+    } 
+    catch(err){ 
+        res.status(500) 
+        res.send(`{'error': '${err}'}`); 
+    } 
+}; 
+
+// Handle a delete one view with id from query 
+exports.donuts_delete_Page = async function(req, res) { 
+    console.log("Delete view for id "  + req.query.id) 
+    try{ 
+        result = await Donuts.findById(req.query.id) 
+        res.render('donutsdelete', { title: 'donuts Delete', toShow: 
+result }); 
+    } 
+    catch(err){ 
+        res.status(500) 
+        res.send(`{'error': '${err}'}`); 
+    } 
+}; 
