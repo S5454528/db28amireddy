@@ -4,14 +4,22 @@ block content
   h1= title
   - var donuts = results
   - let result;
-  script.
-    function buy(x){
-      alert('Purchased Item: ' + x)
-   } 
+ 
   div(class='container-fluid')
     div(class='row')
       each result, index in donuts
+        - let destination = `dispatch(\"/donuts/update?id=${result._id}\")` 
         div(class='col-sm-2' onclick='buy('+index+')') 
           p #{result["donut_type"]}
           p #{result["quantity"]}
           p #{result["cost"]}
+          button.btn( class="btn-primary ml-1", onclick= destination) Update 
+
+  script.
+    function buy(x){
+      alert('Purchased Item: ' + x)
+    }
+  script. 
+   function dispatch(path){ 
+      window.location.href=path 
+    } 
