@@ -2,24 +2,21 @@ extends layout
 
 block content
   h1= title
-  - var donuts = results
-  - let result;
- 
-  div(class='container-fluid')
-    div(class='row')
-      each result, index in donuts
-        - let destination = `dispatch(\"/donuts/update?id=${result._id}\")` 
-        div(class='col-sm-2' onclick='buy('+index+')') 
-          p #{result["donut_type"]}
-          p #{result["quantity"]}
-          p #{result["cost"]}
-          button.btn( class="btn-primary ml-1", onclick= destination) Update 
+  - let createView = `dispatch(\"donuts/create\")`
+  button.btn(class="btn-primary m1-2", onclick=createView) Create
+  - let results = theDonuts
+  div(class="container-fuild")
+    div(class="row")
+      each item in results
+       - let updateView = `dispatch(\"/donuts/update?id=${item._id}\")`
+       - let detailView = `dispatch(\"/donuts/detail?id=${item._id}\")`
+       - let deleteView = `dispatch(\"/donuts/delete?id=${item._id}\")`
+        div(class="row-sm-2", class="m-1") Item is #{item.donut_type} with cost is #{item.cost} and quantity is #{item.quantity} </br>
+         button.btn(class="btn-primary ml-2", onclick= updateView) Update
+         button.btn(class="btn-primary ml-2", onclick= detailView) Detail
+         button.btn(class="btn-danger ml-2", onclick= deleteView) Delete
 
   script.
-    function buy(x){
-      alert('Purchased Item: ' + x)
+    function dispatch(path){
+      window.location.href=path
     }
-  script. 
-   function dispatch(path){ 
-      window.location.href=path 
-    } 

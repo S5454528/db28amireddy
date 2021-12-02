@@ -13,6 +13,9 @@ block content
     div.form-group 
         label.donutsAttr(for='cost') Donuts cost 
         input#cost(type='number', name='cost') 
+    div.form-group 
+        label.dountsAttr(for='toppings') Donuts Toppings
+        input#size(type='number', name='toppings',value=toppings min=0, max=3)
 
     button(class="btn btn-danger m-2" onclick="createeOnid()") Create 
     button(class="btn btn-secondary m-2" onclick="cancel()") Cancel 
